@@ -13,74 +13,65 @@ logger = logging.getLogger(__name__)
 import streamlit as st
 from modules.nav import SideBarLinks
 
-# streamlit supports reguarl and wide layout (how the controls
-# are organized/displayed on the screen).
-st.set_page_config(layout = 'wide')
+# streamlit supports regular and wide layout
+st.set_page_config(layout='wide')
 
-# If a user is at this page, we assume they are not 
-# authenticated.  So we change the 'authenticated' value
-# in the streamlit session_state to false. 
+# Not authenticated at this page
 st.session_state['authenticated'] = False
 
-# Use the SideBarLinks function from src/modules/nav.py to control
-# the links displayed on the left-side panel. 
-# IMPORTANT: ensure src/.streamlit/config.toml sets
-# showSidebarNavigation = false in the [client] section
+# Sidebar links
 SideBarLinks(show_home=True)
 
 # ***************************************************
 #    The major content of this page
 # ***************************************************
-
-# set the title of the page and provide a simple prompt. 
 logger.info("Loading the Home page of the app")
-st.title('SkillSeeker')
+st.title('Delta Sigma Pi Sigma Omega Database')
 st.write('\n\n')
-st.write('### Which user would you like to sign in as?')
+st.write('### Search for Courses')
 
-# For each of the user personas for which we are implementing
-# functionality, we put a button on the screen that the user 
-# can click to MIMIC logging in as that mock user. 
+# -------------------------------
+# Hardcoded list of courses (you can later pull this from DB)
+# Each course maps to its page file
+# -------------------------------
+courses = {
+    "FINA 2201 - Financial Management": "pages/fina2201.py",
+    "ACCT 1201 - Financial Accounting and Reporting": "pages/acct1201.py",
+    "MATH 1342 - Calculus 2": "pages/03_skill_management.py",
+    "PHYS 1151 - Physics 1": "pages/03_skill_management.py",
+    "PHYS 1152 - Physics 2": "pages/03_skill_management.py",
+    "ECON 1115 - Principles of Macroeconomics": "pages/econ1115.py",
+    "ECON 1116 - Principles of Microeconomics": "pages/03_skill_management.py",
+    "BUSN 1101 - Introduction to Business": "pages/03_skill_management.py"
+}
 
-if st.button("Act as Alex, a Student at Northeastern University", 
-            type = 'primary', 
-            use_container_width=True):
-    # when user clicks the button, they are now considered authenticated
-    st.session_state['authenticated'] = True
-    # we set the role of the current user
-    st.session_state['role'] = 'student'
-    # we add the first name of the user (so it can be displayed on 
-    # subsequent pages). 
-    st.session_state['first_name'] = 'Alex'
-    # finally, we ask streamlit to switch to another page, in this case, the 
-    # landing page for this particular user type
-    logger.info("Logging in as Northeastern Student Persona")
-    st.switch_page('pages/00_Student_Home.py')
+# -------------------------------
+# Search bar
+# -------------------------------
+search_query = st.text_input("🔎 Enter course name or code")
 
-if st.button('Act as Sarah, a Professor at Northeastern University', 
-            type = 'primary', 
-            use_container_width=True):
-    st.session_state['authenticated'] = True
-    st.session_state['role'] = 'professor'
-    st.session_state['first_name'] = 'Sarah'
-    logger.info("Logging in as Northeastern Professor Persona")
-    st.switch_page('pages/10_professor_home.py')
+if search_query:
+    # filter results
+    results = {c: page for c, page in courses.items() if search_query.lower() in c.lower()}
+    
+    if results:
+        st.subheader("Results:")
+        for course, page in results.items():
+            if st.button(course, use_container_width=True):
+                st.session_state['authenticated'] = True
+                st.session_state['role'] = 'student'
+                st.session_state['first_name'] = 'Alex'
+                st.session_state['selected_course'] = course
+                logger.info(f"User selected course: {course}, routing to {page}")
+                st.switch_page(page)
+    else:
+        st.info("No matching courses found.")
+else:
+    st.write("Type above to search courses.")
 
-if st.button('Act as Tom, an employer at a Tech Company', 
-            type = 'primary', 
-            use_container_width=True):
-    st.session_state['authenticated'] = True
-    st.session_state['role'] = 'employer'
-    st.session_state['first_name'] = 'Tom'
-    st.switch_page('pages/20_employer_home.py')
-
-if st.button('Act as Bobby, a Co-Op Advisor at Northeastern University', 
-            type = 'primary', 
-            use_container_width=True):
-    st.session_state['authenticated'] = True
-    st.session_state['role'] = 'advisor'
-    st.session_state['first_name'] = 'Bobby'
-    st.switch_page('pages/30_cpAdvisorHome.py')
-
-
-
+# -------------------------------
+# "My Classes" button
+# -------------------------------
+st.write("---")
+if st.button("📚 My Classes", use_container_width=True):
+    st.switch_page("pages/02_skill_gap_analysis.py")

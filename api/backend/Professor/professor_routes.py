@@ -8,7 +8,7 @@ professors = Blueprint('professors', __name__)
 @professors.route('/professorsgetall', methods=['GET'])
 def get_all_professors():
     query = '''
-        SELECT professorID, name, email, departmentID
+        SELECT *
         FROM Professor
     '''
     try:
@@ -51,42 +51,60 @@ def add_professor():
     
     return response
 
-# Update a professor
-@professors.route('/<int:professorID>/update', methods=['PUT'])
-def update_professor(professorID):
+@professors.route('/rate', methods=['POST'])
+def rate_professor():
     """
-    Update an existing professor's details.
+    Add a new rating for a professor and update their rating as a running average.
     """
     the_data = request.json
-    current_app.logger.info(f"Updating professor {professorID}: {the_data}")
-
-    query = '''
-        UPDATE Professor
-        SET name = COALESCE(%s, name),
-            email = COALESCE(%s, email),
-            departmentID = COALESCE(%s, departmentID)
-        WHERE professorID = %s
-    '''
+    current_app.logger.info(f"Adding rating: {the_data}")
+    
+    db_conn = db.get_db()
+    cursor = db_conn.cursor()
+    
     try:
-        cursor = db.get_db().cursor()
-        cursor.execute(query, (
-            the_data.get('name'),
-            the_data.get('email'),
-            the_data.get('departmentID'),
-            professorID
+        professor_id = the_data['professorID']
+        
+        # Insert new rating into Rating table
+        cursor.execute('''
+            INSERT INTO Rating (professorID, clarity, engagement, fairness, helpfulness, comments)
+            VALUES (%s, %s, %s, %s, %s, %s)
+        ''', (
+            professor_id,
+            the_data.get('clarity', 0),
+            the_data.get('engagement', 0),
+            the_data.get('fairness', 0),
+            the_data.get('helpfulness', 0),
+            the_data.get('comments', '')
         ))
-        db.get_db().commit()
-
-        if cursor.rowcount == 0:
-            response = make_response("Professor not found", 404)
-        else:
-            response = make_response("Professor updated successfully", 200)
+        
+        # Fetch current average rating
+        cursor.execute('SELECT rating FROM Professor WHERE professorID = %s', (professor_id,))
+        current_avg = cursor.fetchone()[0] or 0
+        
+        # Calculate new rating as average of previous avg and new rating
+        new_rating = (
+            the_data.get('clarity', 0) +
+            the_data.get('engagement', 0) +
+            the_data.get('fairness', 0) +
+            the_data.get('helpfulness', 0)
+        ) / 4
+        
+        updated_avg = round((current_avg + new_rating) / 2, 2)
+        
+        # Update Professor table
+        cursor.execute('UPDATE Professor SET rating = %s WHERE professorID = %s', (updated_avg, professor_id))
+        
+        db_conn.commit()
+        response = make_response("Rating added and professor average updated", 201)
+    
     except Exception as e:
-        db.get_db().rollback()
-        current_app.logger.error(f"Error updating professor: {e}")
+        db_conn.rollback()
+        current_app.logger.error(f"Error adding rating: {e}")
         response = make_response({"error": str(e)}, 500)
-
+    
     return response
+
 
 
 # Delete a professor

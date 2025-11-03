@@ -58,7 +58,7 @@ def SideBarLinks(show_home=False):
     """
 
     # add a logo to the sidebar always
-    st.sidebar.image("assets/logo.png", width=300)
+    #st.sidebar.image("assets/dsplogo.jpg", width=300)
 
     # If there is no logged in user, redirect to the Home (Landing) page
     if "authenticated" not in st.session_state:
@@ -85,7 +85,11 @@ def SideBarLinks(show_home=False):
         if st.session_state["role"] == "advisor":
             ManageStudentsNav()
             ManageProfessorsNav()
-
+            
+  # 🔗 Always show external NU Banner link
+    st.sidebar.markdown(
+        "[📎 NU Banner Registration](https://nubanner.neu.edu/StudentRegistrationSsb/ssb/registration/registration)"
+    )
     # Always show the About page at the bottom of the list of links
     AboutPageNav()
 

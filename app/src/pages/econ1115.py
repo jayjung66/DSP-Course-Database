@@ -20,7 +20,7 @@ if st.button("⬅️ Back to Home"):
 # -----------------------------------
 # Page Content
 # -----------------------------------
-st.title("ECON 1116 – Principles of Microeconomics")
+st.title("ECON 1115 – Principles of Macroeconomics")
 st.write("Welcome, {0} 👋".format(st.session_state.get('first_name', 'Student')))
 st.write("Here you can view professor rankings, notes, and useful resources for this course.")
 
@@ -34,23 +34,32 @@ st.subheader("📊 Course Overview")
 col1, col2, col3 = st.columns(3)
 
 with col1:
-    st.metric("Average Enjoyment", "3/5", help="Based on student reviews")
+    st.metric("Average Enjoyment", "2.5/5", help="Based on student reviews")
 
 with col2:
     st.metric("Average Difficulty", "2/5", help="Based on student reviews")
 
 with col3:
-    st.metric("Total Reviews", "1", help="Number of student reviews")
+    st.metric("Total Reviews", "2", help="Number of student reviews")
 
 st.divider()
 
 # -----------------------------------
 # Professor Information
 # -----------------------------------
-st.subheader("👨‍🏫 Professor: Francis Georges")
+st.subheader("👨‍🏫 Professor: Peter Simon")
 
-st.write("**Review from Fall 2024:**")
-st.write("- **Student:** Sylvia Dunaevschii")
+st.write("**Review #1 - Spring 2024:**")
+st.write("- **Student:** Susan Huang")
+st.write("- **Semester:** Spring 2024")
+st.write("- **Format:** In Person")
+st.write("- **Enjoyment Rating:** ⭐⭐ (2/5)")
+st.write("- **Difficulty Rating:** 💪💪 (2/5)")
+
+st.write("")
+
+st.write("**Review #2 - Fall 2024:**")
+st.write("- **Student:** Abigail DeMaioribus")
 st.write("- **Semester:** Fall 2024")
 st.write("- **Format:** In Person")
 st.write("- **Enjoyment Rating:** ⭐⭐⭐ (3/5)")
@@ -63,7 +72,14 @@ st.divider()
 # -----------------------------------
 st.subheader("💬 Student Comments & Advice")
 
-with st.expander("📚 Study Materials & Exam Tips from Sylvia Dunaevschii", expanded=True):
+with st.expander("📚 Review from Susan Huang (Spring 2024)", expanded=True):
+    st.write("**Comments on Course:**")
+    st.info("Check the course reviews for detailed feedback and experiences.")
+    
+    st.write("**Study Folder & Exam Advice:**")
+    st.info("Students have contributed notes, past exams, and projects to help you succeed!")
+
+with st.expander("📚 Review from Abigail DeMaioribus (Fall 2024)", expanded=False):
     st.write("**Comments on Course:**")
     st.info("Check the course reviews for detailed feedback and experiences.")
     
@@ -78,9 +94,10 @@ st.divider()
 st.subheader("📂 Available Study Notes")
 
 notes_list = [
-    {"title": "Midterm 1 Review Guide", "file": "midterm1_review.pdf"},
-    {"title": "Elasticity Summary", "file": "elasticity_summary.docx"},
-    {"title": "Final Exam Formula Sheet", "file": "final_exam_formulas.pdf"},
+    {"title": "Macroeconomics Midterm Study Guide", "file": "macro_midterm_guide.pdf"},
+    {"title": "GDP & National Income Notes", "file": "gdp_notes.docx"},
+    {"title": "Fiscal Policy Summary", "file": "fiscal_policy.pdf"},
+    {"title": "Final Exam Review Sheet", "file": "final_review.pdf"},
 ]
 
 for note in notes_list:
@@ -97,8 +114,9 @@ st.divider()
 # -----------------------------------
 st.subheader("📖 Additional Resources")
 st.markdown("""
-- 📊 [Interactive Supply & Demand Graph Tool](#)  
-- 🎥 [YouTube Playlist: ECON 1116 Explained](#)  
-- 📘 [OpenStax Principles of Microeconomics Textbook](https://openstax.org/books/principles-microeconomics-2e/pages/1-introduction)  
-- 🎓 [Khan Academy: Microeconomics](https://www.khanacademy.org/economics-finance-domain/microeconomics)
+- 📊 [Interactive Macroeconomic Models](#)  
+- 🎥 [YouTube Playlist: ECON 1115 Explained](#)  
+- 📘 [OpenStax Principles of Macroeconomics Textbook](https://openstax.org/books/principles-macroeconomics-2e/pages/1-introduction)  
+- 🎓 [Khan Academy: Macroeconomics](https://www.khanacademy.org/economics-finance-domain/macroeconomics)
+- 📈 [FRED Economic Data](https://fred.stlouisfed.org/)
 """)
