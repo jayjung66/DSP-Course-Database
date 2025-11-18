@@ -138,25 +138,25 @@ search_query = st.text_input("🔎 Search for a course", placeholder="Start typi
 # Filter courses based on search
 if search_query:
     filtered_courses = {c: page for c, page in courses.items() if search_query.lower() in c.lower()}
-else:
-    filtered_courses = courses
-
-# Show dropdown with filtered results
-if filtered_courses:
-    selected_course = st.selectbox(
-        "Select from matching courses:",
-        options=[""] + list(filtered_courses.keys()),
-        format_func=lambda x: "Choose a course..." if x == "" else x
-    )
     
-    if selected_course and selected_course != "":
-        if st.button(f"Go to {selected_course}", type="primary", use_container_width=True):
-            st.session_state['authenticated'] = True
-            st.session_state['role'] = 'student'
-            st.session_state['first_name'] = 'Alex'
-            st.session_state['selected_course'] = selected_course
-            page = courses[selected_course]
-            logger.info(f"User selected course: {selected_course}, routing to {page}")
-            st.switch_page(page)
+    # Show dropdown with filtered results
+    if filtered_courses:
+        selected_course = st.selectbox(
+            "Select from matching courses:",
+            options=[""] + list(filtered_courses.keys()),
+            format_func=lambda x: "Choose a course..." if x == "" else x
+        )
+        
+        if selected_course and selected_course != "":
+            if st.button(f"Go to {selected_course}", type="primary", use_container_width=True):
+                st.session_state['authenticated'] = True
+                st.session_state['role'] = 'student'
+                st.session_state['first_name'] = 'Alex'
+                st.session_state['selected_course'] = selected_course
+                page = courses[selected_course]
+                logger.info(f"User selected course: {selected_course}, routing to {page}")
+                st.switch_page(page)
+    else:
+        st.info("No matching courses found.")
 else:
-    st.info("No matching courses found.")
+    st.write("Type above to search courses.")
