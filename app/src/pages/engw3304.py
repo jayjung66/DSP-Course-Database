@@ -1,7 +1,6 @@
 import logging
 logger = logging.getLogger(__name__)
 import requests
-
 import streamlit as st
 from modules.nav import SideBarLinks
 
@@ -9,8 +8,6 @@ from modules.nav import SideBarLinks
 API_BASE = "http://web-api:4000"
 
 st.set_page_config(layout='wide')
-
-# Sidebar
 SideBarLinks()
 
 # Back button
@@ -20,93 +17,84 @@ if st.button("⬅️ Back to Home"):
 # -----------------------------------
 # Page Content
 # -----------------------------------
-st.title("ECON 1115 – Principles of Macroeconomics")
+st.title("ENGW 3304 – Advanced Writing in the Disciplines for Business Professionals")
 st.write("Welcome, {0} 👋".format(st.session_state.get('first_name', 'Student')))
 st.write("Here you can view professor rankings, notes, and useful resources for this course.")
-
 st.divider()
 
 # -----------------------------------
 # Course Overview
 # -----------------------------------
 st.subheader("📊 Course Overview")
-
 col1, col2, col3 = st.columns(3)
+with col1: st.metric("Average Enjoyment", "3.7/5", help="Based on student reviews")
+with col2: st.metric("Average Difficulty", "1.3/5", help="Based on student reviews")
+with col3: st.metric("Total Reviews", "3", help="Number of student reviews (ENGW 3304 only)")
+st.divider()
 
+# -----------------------------------
+# Professor Reviews
+# -----------------------------------
+st.subheader("👨‍🏫 Professor Reviews")
+
+# Professor: Elly Jackson
+with st.expander("⭐ Professor: Elly Jackson (1 review)", expanded=True):
+    st.write("**Review - Sarah Bouvier (Fall 2024)**")
+    st.write("- **Format:** In Person (also teaches online)")
+    st.write("- **Enjoyment:** ⭐⭐⭐ (3/5)")
+    st.write("- **Difficulty:** 💪 (1/5)")
+    st.info("**Comments:** TAKE HER. It was so easy and she is so incredibly sweet. I took it online, she also teaches in person. If you can choose between the two, take online, I've heard the actual going to class is a waste of time. Regardless, she is amazing. She grades very nicely, workload is very small. I wrote one actual paper the entire semester and it was an 8 page research paper. Otherwise, small projects and easy write ups. Take her 100%.")
+
+# Professor: David Ober
+with st.expander("⭐ Professor: David Ober (1 review)", expanded=False):
+    st.write("**Review - Joao Andrade Merjam (Fall 2024)**")
+    st.write("- **Format:** In Person")
+    st.write("- **Enjoyment:** ⭐⭐⭐ (3/5)")
+    st.write("- **Difficulty:** 💪💪 (2/5)")
+    st.info("**Comments:** Class was a little disorganized, and very boring. Work is very doable, just can be a lot of writing at times, probably much easier to do online.")
+
+# Professor: Jonathan Benda
+with st.expander("⭐ Professor: Jonathan Benda (1 review)", expanded=False):
+    st.write("**Review - Susan Huang (Spring 2025)**")
+    st.write("- **Format:** In Person")
+    st.write("- **Enjoyment:** ⭐⭐⭐⭐⭐ (5/5)")
+    st.write("- **Difficulty:** 💪 (1/5)")
+    st.info("**Comments:** He is super nice and honestly grades pretty easily. Only three big essays throughout the semester, and he gives you a lot of class time to work on them.")
+st.divider()
+
+# -----------------------------------
+# Key Takeaways
+# -----------------------------------
+st.subheader("💡 Key Takeaways from Reviews")
+col1, col2 = st.columns(2)
 with col1:
-    st.metric("Average Enjoyment", "2.5/5", help="Based on student reviews")
-
+    st.write("**Most Popular Professors:**")
+    st.write("1. Elly Jackson (1 review)")
+    st.write("2. David Ober (1 review)")
+    st.write("3. Jonathan Benda (1 review)")
 with col2:
-    st.metric("Average Difficulty", "2/5", help="Based on student reviews")
-
-with col3:
-    st.metric("Total Reviews", "2", help="Number of student reviews")
-
-st.divider()
-
-# -----------------------------------
-# Professor Information
-# -----------------------------------
-st.subheader("👨‍🏫 Professor: Peter Simon")
-
-st.write("**Review #1 - Spring 2024:**")
-st.write("- **Student:** Susan Huang")
-st.write("- **Semester:** Spring 2024")
-st.write("- **Format:** In Person")
-st.write("- **Enjoyment Rating:** ⭐⭐ (2/5)")
-st.write("- **Difficulty Rating:** 💪💪 (2/5)")
-
-st.write("")
-
-st.write("**Review #2 - Fall 2024:**")
-st.write("- **Student:** Abigail DeMaioribus")
-st.write("- **Semester:** Fall 2024")
-st.write("- **Format:** In Person")
-st.write("- **Enjoyment Rating:** ⭐⭐⭐ (3/5)")
-st.write("- **Difficulty Rating:** 💪💪 (2/5)")
-
-st.divider()
-
-# -----------------------------------
-# Student Comments & Advice
-# -----------------------------------
-st.subheader("💬 Student Comments & Advice")
-
-with st.expander("📚 Review from Susan Huang (Spring 2024)", expanded=True):
-    st.write("**Comments on Course:**")
-    st.info("Check the course reviews for detailed feedback and experiences.")
-    
-    st.write("**Study Folder & Exam Advice:**")
-    st.info("Students have contributed notes, past exams, and projects to help you succeed!")
-
-with st.expander("📚 Review from Abigail DeMaioribus (Fall 2024)", expanded=False):
-    st.write("**Comments on Course:**")
-    st.info("Check the course reviews for detailed feedback and experiences.")
-    
-    st.write("**Study Folder & Exam Advice:**")
-    st.info("Students have contributed notes, past exams, and projects to help you succeed!")
-
+    st.write("**Common Themes:**")
+    st.write("- Workload varies by professor")
+    st.write("- Online format often easier")
+    st.write("- Generally light grading and manageable assignments")
+    st.write("- Writing-intensive but not overwhelming")
 st.divider()
 
 # -----------------------------------
 # Study Notes
 # -----------------------------------
 st.subheader("📂 Available Study Notes")
-
 notes_list = [
-    {"title": "Macroeconomics Midterm Study Guide", "file": "macro_midterm_guide.pdf"},
-    {"title": "GDP & National Income Notes", "file": "gdp_notes.docx"},
-    {"title": "Fiscal Policy Summary", "file": "fiscal_policy.pdf"},
-    {"title": "Final Exam Review Sheet", "file": "final_review.pdf"},
+    {"title": "Business Writing Research Paper Guide", "file": "engw3304_research.pdf"},
+    {"title": "Essay Planning Notes", "file": "engw3304_essays.docx"},
+    {"title": "Final Exam Review Sheet", "file": "engw3304_final.pdf"},
 ]
-
 for note in notes_list:
     st.download_button(
         label=f"📄 {note['title']}",
         file_name=note['file'],
         data=f"Dummy content for {note['file']}",  # replace with actual file data
     )
-
 st.divider()
 
 # -----------------------------------
@@ -114,9 +102,8 @@ st.divider()
 # -----------------------------------
 st.subheader("📖 Additional Resources")
 st.markdown("""
-- 📊 [Interactive Macroeconomic Models](#)  
-- 🎥 [YouTube Playlist: ECON 1115 Explained](#)  
-- 📘 [OpenStax Principles of Macroeconomics Textbook](https://openstax.org/books/principles-macroeconomics-2e/pages/1-introduction)  
-- 🎓 [Khan Academy: Macroeconomics](https://www.khanacademy.org/economics-finance-domain/macroeconomics)
-- 📈 [FRED Economic Data](https://fred.stlouisfed.org/)
+- 📘 [Business Writing Essentials](#)  
+- 🎓 [Khan Academy: Writing & Communication](https://www.khanacademy.org/)  
+- 🎥 [YouTube Playlist: Advanced Writing for Business](#)  
+- 📊 [Practice Problems – Writing in Business Contexts](#)  
 """)

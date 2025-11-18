@@ -13,6 +13,15 @@ SideBarLinks()
 if st.button("⬅️ Back to Course Page"):
     st.switch_page('pages/ECON1116.py')  # replace with your course page file name
 
+# Fetch all available skills
+def fetch_all_professors():
+    try:
+        response = requests.get(f"{API_BASE}/skills/all")
+        response.raise_for_status()
+        return response.json()  # Parse JSON response
+    except requests.exceptions.RequestException as e:
+        st.error(f"Error fetching students: {e}")
+        return []
 # -----------------------------------
 # Page Content
 # -----------------------------------

@@ -1,127 +1,85 @@
 CREATE DATABASE IF NOT EXISTS skillseeker;
 
-USE skillseeker;
+USE course_ratings;
 
+-- ==========================
+-- Department Table
+-- ==========================
 CREATE TABLE IF NOT EXISTS Department (
     departmentID INT PRIMARY KEY AUTO_INCREMENT,
-    name VARCHAR(255)
+    name VARCHAR(255) NOT NULL
 );
 
+-- ==========================
+-- Professor Table
+-- ==========================
 CREATE TABLE IF NOT EXISTS Professor (
     professorID INT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(255) NOT NULL,
     email VARCHAR(255),
-    name VARCHAR(255),
     departmentID INT,
-    FOREIGN KEY (departmentID) REFERENCES Department(departmentID)
+    FOREIGN KEY (departmentID) REFERENCES Department(departmentID) ON DELETE SET NULL
 );
 
+-- ==========================
+-- Course Table
+-- ==========================
 CREATE TABLE IF NOT EXISTS Course (
     courseID INT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(255) NOT NULL,
     description TEXT,
-    name VARCHAR(255),
-    professorID INT,
-    FOREIGN KEY (professorID) REFERENCES Professor(professorID)
-);
-
-CREATE TABLE IF NOT EXISTS Skill (
-    skillID INT PRIMARY KEY AUTO_INCREMENT,
-    name VARCHAR(255)
-);
-
-CREATE TABLE IF NOT EXISTS Course_Skill (
-    skillID INT,
-    courseID INT,
-    proficiencyLevel INT,
-    PRIMARY KEY (skillID, courseID),
-    FOREIGN KEY (skillID) REFERENCES Skill(skillID) ON DELETE CASCADE,
-    FOREIGN KEY (courseID) REFERENCES Course(courseID) ON DELETE CASCADE
-);
-
-CREATE TABLE IF NOT EXISTS Student (
-    NUID INT PRIMARY KEY AUTO_INCREMENT,
-    email VARCHAR(255),
-    name VARCHAR(255),
-    GPA DOUBLE,
-    major VARCHAR(255)
-);
-
-CREATE TABLE IF NOT EXISTS Student_Course (
-    NUID INT,
-    courseID INT,
-    PRIMARY KEY (NUID, courseID),
-    FOREIGN KEY (NUID) REFERENCES Student(NUID) ON DELETE CASCADE,
-    FOREIGN KEY (courseID) REFERENCES Course(courseID) ON DELETE CASCADE
-);
-
-CREATE TABLE IF NOT EXISTS Student_Skill (
-    skillID INT,
-    NUID INT,
-    proficiencyLevel INT,
-    PRIMARY KEY (skillID, NUID),
-    FOREIGN KEY (skillID) REFERENCES Skill(skillID) ON DELETE CASCADE,
-    FOREIGN KEY (NUID) REFERENCES Student(NUID) ON DELETE CASCADE
-    );
-
-CREATE TABLE IF NOT EXISTS CoOp (
-    jobID INT PRIMARY KEY AUTO_INCREMENT,
-    jobTitle VARCHAR(255),
-    companyName VARCHAR(255),
-    industry VARCHAR(255)
-);
-
-CREATE TABLE IF NOT EXISTS CoOp_Skill (
-    skillID INT,
-    jobID INT,
-    proficiencyLevel INT,
-    PRIMARY KEY (skillID, jobID),
-    FOREIGN KEY (skillID) REFERENCES Skill(skillID) ON DELETE CASCADE,
-    FOREIGN KEY (jobID) REFERENCES CoOp(jobID) ON DELETE CASCADE
-    );
-
-CREATE TABLE IF NOT EXISTS Student_CoOp (
-    NUID INT,
-    jobID INT,
-    PRIMARY KEY (NUID, jobID),
-    FOREIGN KEY (NUID) REFERENCES Student(NUID) ON DELETE CASCADE,
-    FOREIGN KEY (jobID) REFERENCES CoOp(jobID) ON DELETE CASCADE
-);
-
-CREATE TABLE IF NOT EXISTS Employer (
-    employerID INT PRIMARY KEY AUTO_INCREMENT,
-    contactEmail VARCHAR(255),
-    contactPhone VARCHAR(255),
-    contactName VARCHAR(255),
-    industry VARCHAR(255)
-);
-
-CREATE TABLE IF NOT EXISTS Employer_CoOp (
-    employerID INT,
-    jobID INT,
-    PRIMARY KEY (employerID, jobID),
-    FOREIGN KEY (employerID) REFERENCES Employer(employerID) ON DELETE CASCADE,
-    FOREIGN KEY (jobID) REFERENCES CoOp(jobID) ON DELETE CASCADE
-);
-
-CREATE TABLE IF NOT EXISTS CoOpAdvisor (
-    advisorID INT PRIMARY KEY AUTO_INCREMENT,
-    email VARCHAR(255),
-    name VARCHAR(255),
     departmentID INT,
-    FOREIGN KEY (departmentID) REFERENCES Department(departmentID) ON DELETE CASCADE
+    professorID INT,
+    FOREIGN KEY (departmentID) REFERENCES Department(departmentID) ON DELETE SET NULL,
+    FOREIGN KEY (professorID) REFERENCES Professor(professorID) ON DELETE SET NULL
 );
 
-CREATE TABLE IF NOT EXISTS AdvisorStudent (
-    NUID INT,
-    advisorID INT,
-    PRIMARY KEY (NUID, advisorID),
-    FOREIGN KEY (NUID) REFERENCES Student(NUID) ON DELETE CASCADE,
-    FOREIGN KEY (advisorID) REFERENCES CoOpAdvisor(advisorID) ON DELETE CASCADE
+-- ==========================
+-- Student Table
+-- ==========================
+CREATE TABLE IF NOT EXISTS Student (
+    studentID INT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(255) NOT NULL,
+    email VARCHAR(255) UNIQUE
 );
 
-CREATE TABLE IF NOT EXISTS AdvisorEmployer (
-    employerID INT,
-    advisorID INT,
-    PRIMARY KEY (employerID, advisorID),
-    FOREIGN KEY (employerID) REFERENCES Employer(employerID) ON DELETE CASCADE,
-    FOREIGN KEY (advisorID) REFERENCES CoOpAdvisor(advisorID) ON DELETE CASCADE
+-- ==========================
+-- Rating Table
+-- ==========================
+CREATE TABLE IF NOT EXISTS Rating (
+    ratingID INT PRIMARY KEY AUTO_INCREMENT,
+    studentID INT,
+    professorID INT,
+    courseID INT,
+    clarity INT CHECK (clarity BETWEEN 1 AND 5),
+    engagement INT CHECK (engagement BETWEEN 1 AND 5),
+    fairness INT CHECK (fairness BETWEEN 1 AND 5),
+    helpfulness INT CHECK (helpfulness BETWEEN 1 AND 5),
+    comments TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (studentID) REFERENCES Student(studentID) ON DELETE SET NULL,
+    FOREIGN KEY (professorID) REFERENCES Professor(professorID) ON DELETE CASCADE,
+    FOREIGN KEY (courseID) REFERENCES Course(courseID) ON DELETE CASCADE
+);
+
+-- ==========================
+-- Course_Professor (for multiple profs per course)
+-- ==========================
+CREATE TABLE IF NOT EXISTS Course_Professor (
+    courseID INT,
+    professorID INT,
+    PRIMARY KEY (courseID, professorID),
+    FOREIGN KEY (courseID) REFERENCES Course(courseID) ON DELETE CASCADE,
+    FOREIGN KEY (professorID) REFERENCES Professor(professorID) ON DELETE CASCADE
+);
+
+-- ==========================
+-- Optional: Department_Course (if needed for flexibility)
+-- ==========================
+CREATE TABLE IF NOT EXISTS Department_Course (
+    departmentID INT,
+    courseID INT,
+    PRIMARY KEY (departmentID, courseID),
+    FOREIGN KEY (departmentID) REFERENCES Department(departmentID) ON DELETE CASCADE,
+    FOREIGN KEY (courseID) REFERENCES Course(courseID) ON DELETE CASCADE
 );
