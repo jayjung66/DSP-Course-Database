@@ -1,15 +1,3 @@
-altair
-pandas
-streamlit
-streamlit-extras
-world-bank-data
-matplotlib
-numpy
-pydeck
+streamlit>=1.28.0
 requests
-openai
-validators
-plotly
-seaborn
-scikit-learn
-shap
+pandas
