@@ -132,8 +132,6 @@ courses = {
 # -------------------------------
 # Search bar
 # -------------------------------
-search_query = st.text_input("🔎 Enter course name or code")
-
 # Searchable dropdown - filters as you type
 search_query = st.text_input("🔎 Search for a course", placeholder="Start typing to filter courses...")
 
