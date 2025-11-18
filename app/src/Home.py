@@ -58,7 +58,7 @@ courses = {
     "COMM 2650 - Communication Course": "pages/comm2650.py",
     "COMM 3304 - Communication Course": "pages/comm3304.py",
     "COMM 3451 - Communication Course": "pages/comm3451.py",
-    "COMM 4464 - Communication Course": "pages/comm4464.py",
+    "COMM 4604 - Communication Course": "pages/comm4604.py",
     
     # Criminal Justice
     "CRIM 1200 - Criminal Justice": "pages/crim1200.py",
